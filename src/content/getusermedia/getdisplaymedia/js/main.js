@@ -9,6 +9,8 @@
 
 const preferredDisplaySurface = document.getElementById('displaySurface');
 const startButton = document.getElementById('startButton');
+const videoArea = document.getElementById('video');
+const dimensions = document.getElementById('dimensions');
 
 if (adapter.browserDetails.browser === 'chrome' &&
     adapter.browserDetails.version >= 107) {
@@ -32,6 +34,7 @@ function handleSuccess(stream) {
     errorMsg('The user has ended sharing the screen');
     startButton.disabled = false;
     preferredDisplaySurface.disabled = false;
+    dimensions.innerHTML = "";
   });
 }
 
@@ -42,6 +45,7 @@ function handleError(error) {
 function errorMsg(msg, error) {
   const errorElement = document.querySelector('#errorMsg');
   errorElement.innerHTML += `<p>${msg}</p>`;
+  dimensions.innerHTML = "";
   if (typeof error !== 'undefined') {
     console.error(error);
   }
@@ -57,6 +61,16 @@ startButton.addEventListener('click', () => {
   navigator.mediaDevices.getDisplayMedia(options)
       .then(handleSuccess, handleError);
 });
+
+videoArea.addEventListener("resize", (e) => {
+  const { videoWidth, videoHeight } = videoArea;
+   
+  
+
+  dimensions.innerHTML = "Dimensions: " + videoWidth + " x " + videoHeight;
+ 
+
+}, false);
 
 if ((navigator.mediaDevices && 'getDisplayMedia' in navigator.mediaDevices)) {
   startButton.disabled = false;
